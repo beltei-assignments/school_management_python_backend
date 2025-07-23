@@ -1,0 +1,7 @@
+FastAPI
+SQLAlchemy
+mysql-connector-python
+pydantic
+uvicorn
+python-dotenv
+black
