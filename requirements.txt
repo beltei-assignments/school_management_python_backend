@@ -5,3 +5,6 @@ pydantic
 uvicorn
 python-dotenv
 black
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
