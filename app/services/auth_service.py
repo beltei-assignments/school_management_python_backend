@@ -18,11 +18,12 @@ def login(db: Session, email: str, password: str):
             status_code=401, detail="Incorrect email address or password"
         )
 
-    token = jwt.create_access_token(data={"sub": user.id})
+    token = jwt.create_access_token(data={"user_id": user.id})
 
     return {
         "success": True,
         "token_type": "bearer",
         "token": token,
-        "user": user_schema.UserBase(user),
+        "user": user_schema.UserGet.from_orm(user),
+        "roles": user.roles,
     }

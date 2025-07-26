@@ -1,17 +1,26 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.database import get_db
+from app.database import get_db, SessionLocal
 from app.schemas import user_schema as user_schema
 from app.services import user_service as user_service
 
-router = APIRouter(tags=["Users"])
+router = APIRouter(tags=["Users management"])
 prefix = "/api/users"
 router.prefix = prefix
 
 
 @router.get("/")
-def get_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    users, count = user_service.get_all_users(db=db, skip=skip, limit=limit)
+def get_all_users(
+    skip: int = 0,
+    limit: int = 10,
+    email: str = None,
+    name: str = None,
+    role_id: int = None,
+    db: Session = Depends(get_db),
+):
+    users, count = user_service.get_all_users(
+        db=db, skip=skip, limit=limit, email=email, name=name, role_id=role_id
+    )
 
     return {"count": count, "rows": users}
 

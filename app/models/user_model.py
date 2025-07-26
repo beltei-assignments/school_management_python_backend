@@ -1,7 +1,8 @@
 from sqlalchemy import Boolean, Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from app.models.user_has_role_model import user_has_role
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from app.database import Base
 
 
 class User(Base):
@@ -14,3 +15,6 @@ class User(Base):
     last_name = Column(String(255))
     phone_number = Column(String(255), nullable=True)
     disabled = Column(Boolean, nullable=True, default=False)
+
+    # Define the relationship
+    roles = relationship("Role", secondary=user_has_role, back_populates="users")
