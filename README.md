@@ -19,6 +19,8 @@ root
 │   ├── database.py          # Database connection setup
 │   └── routers
 │       └── user_route.py          # API routes for user operations
+│   └── utils
+│       └── paginate.py          # App utilities and helpers function
 ├── requirements.txt          # Project dependencies
 └── README.md                 # Project documentation
 ```
@@ -67,6 +69,15 @@ root
 Access Swagger dashboard for testing APIs.
 
 http://127.0.0.1:8000/docs
+
+- **Login:**
+  ```
+  POST /auth/login
+  {
+     "email": "admin@example.com",
+     "password": "123"
+   }
+  ```
 
 - **Get all users:**
   ```
