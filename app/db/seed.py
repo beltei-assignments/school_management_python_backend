@@ -2,7 +2,7 @@ from app.database import SessionLocal
 from sqlalchemy import text
 from app.models.user_model import User
 from app.models.role_model import Role
-from app.models.user_has_role_model import user_has_role
+from app.models.user_has_role_model import UserHasRole
 from app.db.seeders.roles import seed_roles
 from app.db.seeders.users import seed_users
 
@@ -23,7 +23,7 @@ def clean_all_tables():
     db = SessionLocal()
     try:
         # For many-to-many association tables, use execute
-        db.execute(user_has_role.delete())
+        db.execute(UserHasRole.delete())
         db.query(User).delete()
         db.query(Role).delete()
         db.commit()

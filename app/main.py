@@ -29,5 +29,7 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth_route.router)
-app.include_router(user_route.router)
+prefix = "/api"
+
+app.include_router(auth_route.router, prefix=prefix)
+app.include_router(user_route.router, prefix=prefix)

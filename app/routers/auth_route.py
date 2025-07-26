@@ -5,9 +5,7 @@ from app.schemas import user_schema
 from app.services import auth_service
 
 router = APIRouter(tags=["Authentications"])
-
-prefix = "/api/auth"
-router.prefix = prefix
+router.prefix = "/auth"
 
 
 @router.post("/login/")

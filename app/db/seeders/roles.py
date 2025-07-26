@@ -4,15 +4,15 @@ from app.models.role_model import Role
 
 def seed_roles():
     db = SessionLocal()
-    role = [
+    roles = [
         {"name": "Admin", "value": "admin"},
         {"name": "Teacher", "value": "teacher"},
         {"name": "Parent", "value": "parent"},
         {"name": "Student", "value": "student"},
     ]
     try:
-        for r in role:
-            db.add(Role(**r))
+        for role in roles:
+            db.add(Role(**role))
         db.commit()
     finally:
         db.close()

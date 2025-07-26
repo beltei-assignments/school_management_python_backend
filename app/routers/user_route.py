@@ -5,8 +5,7 @@ from app.schemas import user_schema as user_schema
 from app.services import user_service as user_service
 
 router = APIRouter(tags=["Users management"])
-prefix = "/api/users"
-router.prefix = prefix
+router.prefix = "/users"
 
 
 @router.get("/")
