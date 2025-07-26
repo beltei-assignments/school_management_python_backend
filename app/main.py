@@ -17,7 +17,7 @@ if os.getenv("DB_CREATE_ALL_TABLE") == "true":
     print("---> Creating all tables completed. <---")
 
 
-app = FastAPI()
+app = FastAPI(title="School Management System API")
 
 # CORS middleware
 app.add_middleware(
