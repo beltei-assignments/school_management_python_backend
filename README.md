@@ -8,6 +8,8 @@ This project is a backend application built with FastAPI and MySQL.
 root
 ├── app
 │   ├── main.py              # Entry point of the application
+│   ├── db
+│   │   └── seeders          # Add seeders for data testing
 │   ├── models
 │   │   └── user_model.py          # User model definition
 │   ├── schemas
@@ -39,46 +41,69 @@ root
    Copy from `.env.example` to `.env`
 
    ```
+   #  Database Configuration
    DB_USER=your_username
    DB_PASSWORD=your_password
    DB_HOST=localhost
    DB_NAME=your_dbname
+   DB_CREATE_ALL_TABLE=true
+   
+   # JWT Configuration
+   JWT_SECRET_KEY="your_secret_key"
+   JWT_ALGORITHM="HS256"
+   JWT_ACCESS_TOKEN_EXPIRE_DAYS=1
     ```
 
 4. **Run the application:**
    ```
    uvicorn app.main:app --reload
    ```
+5. **Run seed data to tables:**
+   ```
+   python -m app.db.seed
+   ```
 
 ## Usage Examples
-Access Swagger dashboard for testing APIS.
+Access Swagger dashboard for testing APIs.
 
 http://127.0.0.1:8000/docs
+
+- **Get all users:**
+  ```
+  GET /users/?page=1&limit=10
+  ```
+
+- **Get user by ID:**
+  ```
+  GET /users/{user_id}
+  ```
 
 - **Create a User:**
   ```
   POST /users
   {
-      "username": "example_user",
-      "email": "user@example.com",
-      "full_name": "Example User",
-      "password": "securepassword"
-  }
-  ```
-
-- **Get a User:**
-  ```
-  GET /users/{user_id}
+     "email": "string",
+     "first_name": "string",
+     "last_name": "string",
+     "password": "string",
+     "phone_number": "string",
+     "roles_ids": [
+       1
+     ]
+   }
   ```
 
 - **Update a User:**
   ```
   PUT /users/{user_id}
-  {
-      "username": "updated_user",
-      "email": "updated@example.com",
-      "full_name": "Updated User"
-  }
+   {
+     "email": "string",
+     "first_name": "string",
+     "last_name": "string",
+     "password": "string",
+     "phone_number": "string",
+     "disabled": false
+   }
   ```
 
 - **Delete a User:**
