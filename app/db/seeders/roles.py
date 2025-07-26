@@ -7,6 +7,7 @@ def seed_roles():
     role = [
         {"name": "Admin", "value": "admin"},
         {"name": "Teacher", "value": "teacher"},
+        {"name": "Parent", "value": "parent"},
         {"name": "Student", "value": "student"},
     ]
     try:

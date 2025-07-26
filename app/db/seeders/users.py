@@ -38,12 +38,20 @@ def seed_users():
             "roles_ids": [3],
         },
         {
+            "email": "bopha@example.com",
+            "password": "123",
+            "first_name": "Bopha",
+            "last_name": "Thy",
+            "phone_number": "1234567890",
+            "roles_ids": [4],
+        },
+        {
             "email": "sok@example.com",
             "password": "123",
             "first_name": "Sok",
             "last_name": "Tep",
             "phone_number": "1234567890",
-            "roles_ids": [3],
+            "roles_ids": [4],
         },
     ]
 
