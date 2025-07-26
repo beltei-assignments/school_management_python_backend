@@ -4,17 +4,19 @@ from fastapi import HTTPException
 from app.models.user_model import User
 from app.models.role_model import Role
 from app.schemas import user_schema
-from app.utils import bcrypt
+from app.utils import bcrypt, paginate
 
 
 def get_all_users(
     db: Session,
-    skip: int = 0,
+    page: int = 1,
     limit: int = 10,
     email: str = None,
     name: str = None,
     role_id: int = None,
 ):
+    skip = paginate.getSkip(page=page, limit=limit)
+
     query = db.query(User)
     # Filters
     if email:

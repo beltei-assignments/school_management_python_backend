@@ -11,7 +11,7 @@ router.prefix = prefix
 
 @router.get("/")
 def get_all_users(
-    skip: int = 0,
+    page: int = 1,
     limit: int = 10,
     email: str = None,
     name: str = None,
@@ -19,7 +19,7 @@ def get_all_users(
     db: Session = Depends(get_db),
 ):
     users, count = user_service.get_all_users(
-        db=db, skip=skip, limit=limit, email=email, name=name, role_id=role_id
+        db=db, page=page, limit=limit, email=email, name=name, role_id=role_id
     )
 
     return {"count": count, "rows": users}
