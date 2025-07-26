@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from app.database import Base
 
-user_has_role = Table(
+UserHasRole = Table(
     "user_has_roles",
     Base.metadata,
     Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),

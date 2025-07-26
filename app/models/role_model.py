@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from app.models.user_has_role_model import user_has_role
+from app.models.user_has_role_model import UserHasRole
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -13,4 +13,4 @@ class Role(Base):
     value = Column(String(255), unique=True)
 
     # Define the relationship
-    users = relationship("User", secondary=user_has_role, back_populates="roles")
+    users = relationship("User", secondary=UserHasRole, back_populates="roles")

@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, Integer, String
-from app.models.user_has_role_model import user_has_role
+from app.models.user_has_role_model import UserHasRole
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -17,4 +17,4 @@ class User(Base):
     disabled = Column(Boolean, nullable=True, default=False)
 
     # Define the relationship
-    roles = relationship("Role", secondary=user_has_role, back_populates="users")
+    roles = relationship("Role", secondary=UserHasRole, back_populates="users")
