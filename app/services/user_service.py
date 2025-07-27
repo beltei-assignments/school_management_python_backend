@@ -17,7 +17,8 @@ def get_all_users(
 ):
     skip = paginate.getSkip(page=page, limit=limit)
 
-    query = db.query(User)
+    query = db.query(User).filter(User.disabled == False)
+
     # Filters
     if email:
         query = query.filter(User.email.ilike(f"%{email}%"))
@@ -39,7 +40,7 @@ def get_all_users(
 
 
 def get_user_by_id(db: Session, user_id: int):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.disabled == False, User.id == user_id).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -71,7 +72,7 @@ def create_user(db: Session, userPayload: user_schema.UserCreate):
 
 
 def update_user(db: Session, user_id: int, userPayload: user_schema.UserUpdate):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.disabled == False, User.id == user_id).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -91,11 +92,11 @@ def update_user(db: Session, user_id: int, userPayload: user_schema.UserUpdate):
 
 
 def delete_user(db: Session, user_id: int):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.disabled == False, User.id == user_id).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    db.delete(user)
+    user.disabled = True
     db.commit()
 
     return user

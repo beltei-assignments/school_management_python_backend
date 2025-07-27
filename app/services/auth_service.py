@@ -6,7 +6,7 @@ from app.schemas import user_schema
 
 
 def login(db: Session, email: str, password: str):
-    user = db.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(User.disabled == False, User.email == email).first()
     if not user:
         raise HTTPException(
             status_code=401, detail="Incorrect email address or password"
