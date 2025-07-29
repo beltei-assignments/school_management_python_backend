@@ -5,13 +5,22 @@ from app.schemas.class_schema import ClassCreate, ClassUpdate
 
 
 def get_all_classes(db: Session, page: int, limit: int, name: str = None):
-    query = db.query(Class)
+    query = db.query(Class).filter(Class.disabled == False)
     if name:
         query = query.filter(Class.name.ilike(f"%{name}%"))
     total = query.count()
     classes = query.offset((page - 1) * limit).limit(limit).all()
-    return classes, total
 
+    if not classes:
+        raise HTTPException(
+            status_code=404,
+            detail=[{
+                "loc": ["body", "name"],
+                "msg": "No classes found matching the criteria",
+                "type": "value_error"
+            }]
+        )
+    return classes, total
 
 def get_class_by_id(db: Session, class_id: int):
     cls = db.query(Class).filter(Class.id == class_id).first()
