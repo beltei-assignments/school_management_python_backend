@@ -5,6 +5,8 @@ from app.models.role_model import Role
 from app.models.user_has_role_model import UserHasRole
 from app.db.seeders.roles import seed_roles
 from app.db.seeders.users import seed_users
+from app.models.subject_model import Subject
+from app.db.seeders.subject import seed_subjects
 
 
 def seed():
@@ -15,7 +17,8 @@ def seed():
     seed_roles()
     seed_users()
     print("---> Seeding roles and users completed. <---")
-
+    seed_subjects()
+    print("---> Seeding subjects completed. <---")
 
 def clean_all_tables():
     print("---> Cleaning all tables, please wait... <---")
@@ -26,11 +29,14 @@ def clean_all_tables():
         db.execute(UserHasRole.delete())
         db.query(User).delete()
         db.query(Role).delete()
+        db.query(Subject).delete()
+
         db.commit()
 
         # Reset auto-increment counters
         db.execute(text("ALTER TABLE users AUTO_INCREMENT = 1;"))
         db.execute(text("ALTER TABLE roles AUTO_INCREMENT = 1;"))
+        db.execute(text("ALTER TABLE subjects AUTO_INCREMENT = 1;"))
         db.commit()
     finally:
         db.close()
