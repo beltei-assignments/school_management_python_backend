@@ -108,5 +108,5 @@ def delete_class(db: Session, class_id: int):
                 "type": "value_error.not_found"
             }]
         )
-    db.delete(cls)
+    cls.disabled = True
     db.commit()
