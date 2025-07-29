@@ -98,7 +98,7 @@ def update_class(db: Session, class_id: int, classPayload: ClassUpdate):
 
 
 def delete_class(db: Session, class_id: int):
-    cls = db.query(Class).filter(Class.id == class_id).first()
+    cls = db.query(Class).filter(Class.id == class_id, Class.disabled == False).first()
     if not cls:
         raise HTTPException(
             status_code=404,
