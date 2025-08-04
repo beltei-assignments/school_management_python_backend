@@ -2,24 +2,27 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.class_model import Class
 from app.schemas.class_schema import ClassCreate, ClassUpdate
+from app.utils import paginate
 
 
 def get_all_classes(db: Session, page: int, limit: int, name: str = None):
+    skip = paginate.getSkip(page=page, limit=limit)
     query = db.query(Class).filter(Class.disabled == False)
+
     if name:
         query = query.filter(Class.name.ilike(f"%{name}%"))
     total = query.count()
-    classes = query.offset((page - 1) * limit).limit(limit).all()
+    classes = query.offset(skip).limit(limit).all()
 
-    if not classes:
-        raise HTTPException(status_code=404, detail="No classes found matching the criteria")
     return classes, total
+
 
 def get_class_by_id(db: Session, class_id: int):
     cls = db.query(Class).filter(Class.id == class_id).first()
     if not cls:
         raise HTTPException(status_code=404, detail="Class not found")
     return cls
+
 
 def create_class(db: Session, classPayload: ClassCreate):
     name = classPayload.name.strip()
@@ -60,6 +63,6 @@ def delete_class(db: Session, class_id: int):
     cls = db.query(Class).filter(Class.id == class_id, Class.disabled == False).first()
     if not cls:
         raise HTTPException(status_code=404, detail="Class not found")
-    
+
     cls.disabled = True
     db.commit()

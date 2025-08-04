@@ -3,6 +3,8 @@ from app.schemas import class_schema
 from app.services import class_service
 
 def seed_classes():
+    print("---> Seeding classes, please wait... <---")
+
     classes = [
         {"name": "A-101", "disabled": False},
         {"name": "B-021", "disabled": False},
@@ -24,3 +26,5 @@ def seed_classes():
                 disabled=cls["disabled"],
             ),
         )
+
+    print("---> Seeding classes completed. <---")
