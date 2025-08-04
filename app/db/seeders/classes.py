@@ -1,8 +1,9 @@
-from app.database import SessionLocal
+from sqlalchemy.orm import Session
 from app.schemas import class_schema
 from app.services import class_service
 
-def seed_classes():
+
+def seed_classes(db: Session):
     print("---> Seeding classes, please wait... <---")
 
     classes = [
@@ -20,7 +21,7 @@ def seed_classes():
 
     for cls in classes:
         class_service.create_class(
-            db=SessionLocal(),
+            db=db,
             classPayload=class_schema.ClassCreate(
                 name=cls["name"],
                 disabled=cls["disabled"],

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from app.database import Base
 
+
 class Class(Base):
     __tablename__ = "classes"
 
