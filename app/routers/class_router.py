@@ -19,11 +19,12 @@ router.prefix = "/classes"
 def get_all_classes(
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1, le=100),
+    id: str = None,
     name: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     classes, count = class_service.get_all_classes(
-        db=db, page=page, limit=limit, name=name
+        db=db, page=page, limit=limit, id=id, name=name
     )
     return {"count": count, "rows": classes}
 

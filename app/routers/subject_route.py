@@ -10,10 +10,14 @@ router.prefix = "/subjects"
 
 @router.get("/")
 def get_all_subjects(
-    page: int = 1, limit: int = 10, name: str = None, db: Session = Depends(get_db)
+    page: int = 1,
+    limit: int = 10,
+    id: str = None,
+    name: str = None,
+    db: Session = Depends(get_db),
 ):
     subjects, count = subject_service.get_all_subjects(
-        db=db, page=page, limit=limit, name=name
+        db=db, page=page, limit=limit, id=id, name=name
     )
 
     return {"count": count, "rows": subjects}

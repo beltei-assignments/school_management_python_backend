@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.user_model import User
+from app.models.role_model import Role
 from app.utils import jwt, bcrypt
 from app.schemas import user_schema
 
@@ -27,3 +28,9 @@ def login(db: Session, email: str, password: str):
         "user": user_schema.UserGet.from_orm(user),
         "roles": user.roles,
     }
+
+
+def get_all_roles(db: Session):
+    roles = db.query(Role).all()
+
+    return roles

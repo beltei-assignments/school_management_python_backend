@@ -6,15 +6,20 @@ from app.schemas import subject_schema
 from app.utils import paginate
 
 
-def get_all_subjects(db: Session, page: int = 1, limit: int = 10, name: str = None):
+def get_all_subjects(
+    db: Session, page: int = 1, limit: int = 10, id: str = None, name: str = None
+):
     skip = paginate.getSkip(page=page, limit=limit)
     query = db.query(Subject).filter(Subject.disabled == False)
 
+    # Filters
+    if id is not None and id is not "":
+        query = query.filter(Subject.id == id)
     if name:
         query = query.filter(Subject.name.ilike(f"%{name}%"))
 
     count = query.count()
-    subjects = query.offset(skip).limit(limit).all()
+    subjects = query.order_by(Subject.id.desc()).offset(skip).limit(limit).all()
 
     subjects_mapped = [
         subject_schema.SubjectGet.from_orm(subject) for subject in subjects

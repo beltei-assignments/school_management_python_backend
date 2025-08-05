@@ -5,14 +5,19 @@ from app.schemas.class_schema import ClassCreate, ClassUpdate
 from app.utils import paginate
 
 
-def get_all_classes(db: Session, page: int, limit: int, name: str = None):
+def get_all_classes(
+    db: Session, page: int, limit: int, id: str = None, name: str = None
+):
     skip = paginate.getSkip(page=page, limit=limit)
     query = db.query(Class).filter(Class.disabled == False)
 
+    # Filters
+    if id is not None and id is not "":
+        query = query.filter(Class.id == id)
     if name:
         query = query.filter(Class.name.ilike(f"%{name}%"))
     total = query.count()
-    classes = query.offset(skip).limit(limit).all()
+    classes = query.order_by(Class.id.desc()).offset(skip).limit(limit).all()
 
     return classes, total
 

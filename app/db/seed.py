@@ -44,6 +44,7 @@ def clean_all_tables(db: Session):
     db.execute(text("ALTER TABLE users AUTO_INCREMENT = 1;"))
     db.execute(text("ALTER TABLE roles AUTO_INCREMENT = 1;"))
     db.execute(text("ALTER TABLE classes AUTO_INCREMENT = 1;"))
+    db.execute(text("ALTER TABLE subjects AUTO_INCREMENT = 1;"))
     db.commit()
 
     print("---> Cleaning all tables completed. <---")
