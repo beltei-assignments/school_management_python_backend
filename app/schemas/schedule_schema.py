@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
+from typing import Optional
 
 class ScheduleEntry(BaseModel):
     day_of_week: str
@@ -27,6 +28,8 @@ class UserOut(BaseModel):
     first_name: str
     last_name: str
     email: str
+    phone_number: Optional[str] = None
+    disabled: bool = False
 
     class Config:
         from_attributes = True
@@ -34,6 +37,7 @@ class UserOut(BaseModel):
 class SubjectOut(BaseModel):
     id: int
     name: str
+    disabled: bool = False
 
     class Config:
         from_attributes = True

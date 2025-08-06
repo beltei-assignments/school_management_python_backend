@@ -6,7 +6,12 @@ from app.models.schedule_model import Schedule, ClassSubject
 from app.schemas.schedule_schema import ScheduleCreate
 
 
-def get_schedules(db: Session, page: int, limit: int, class_id=None, subject_id=None, teacher_id=None):
+def get_schedules(db: Session, page: int = 1, limit: int = 10, class_id=None, subject_id=None, teacher_id=None):
+    if page < 1:
+        page = 1
+    if limit < 1:
+        limit = 10
+
     query = db.query(ClassSubject).options(
         joinedload(ClassSubject.class_),
         joinedload(ClassSubject.subject),
@@ -36,12 +41,10 @@ def create_schedule(db: Session, data: ScheduleCreate):
     if not data.teacher_id:
         raise HTTPException(status_code=400, detail="Teacher id must not be empty")
     if not data.schedules or len(data.schedules) == 0:
-        raise HTTPException(status_code=400, detail="At least one schedule must not be empty")
+        raise HTTPException(status_code=400, detail="At least one schedule must be provided")
 
-    for sched in enumerate(data.schedules):
-        if not sched.day_of_week or sched.day_of_week.strip() == "":
-            raise HTTPException(status_code=422, detail="Day of week must not be empty")
-
+    # Validate each schedule
+    for sched in data.schedules:
         if sched.start_time == sched.end_time:
             raise HTTPException(status_code=422, detail="Start time and end time cannot be the same")
 
@@ -68,23 +71,24 @@ def create_schedule(db: Session, data: ScheduleCreate):
     created_schedules = []
 
     for sched in data.schedules:
-        # Prevent duplicate schedules
-        existing = db.query(Schedule).filter_by(
-            class_subject_id=class_subject.id,
-            day_of_week=sched.day_of_week,
-            start_time=sched.start_time,
-            end_time=sched.end_time
+        day_of_week = sched.day_of_week.strip()
+        conflict = db.query(Schedule).filter(
+            Schedule.class_subject_id == class_subject.id,
+            Schedule.day_of_week == day_of_week,
+            Schedule.start_time < sched.end_time,
+            Schedule.end_time > sched.start_time
         ).first()
 
-        if existing:
+        if conflict:
             raise HTTPException(
                 status_code=409,
-                detail=f"Schedule already exists: {sched.day_of_week} from {sched.start_time} to {sched.end_time}"
+                detail=f"Schedule conflict: overlaps with existing schedule on {day_of_week} "
+                       f"from {conflict.start_time} to {conflict.end_time}"
             )
 
         schedule_entry = Schedule(
             class_subject_id=class_subject.id,
-            day_of_week=sched.day_of_week.strip(),
+            day_of_week=day_of_week,
             start_time=sched.start_time,
             end_time=sched.end_time
         )
@@ -99,4 +103,7 @@ def create_schedule(db: Session, data: ScheduleCreate):
         db.rollback()
         raise HTTPException(status_code=400, detail="Error creating schedule")
 
-    return {"success": True, "created": len(created_schedules)}
+    return {
+        "success": True,
+        "created": len(created_schedules)
+    }
