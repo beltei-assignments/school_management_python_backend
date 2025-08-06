@@ -103,7 +103,4 @@ def create_schedule(db: Session, data: ScheduleCreate):
         db.rollback()
         raise HTTPException(status_code=400, detail="Error creating schedule")
 
-    return {
-        "success": True,
-        "created": len(created_schedules)
-    }
+    return { "success": True }
