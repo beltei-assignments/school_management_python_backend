@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 from app.database import engine, Base
-from app.routers import user_route, auth_route, subject_route, class_router, role_route
+from app.routers import user_route, auth_route, subject_route, class_router, role_route, schedule_route  
 
 load_dotenv()  # Load variables from .env
 
@@ -14,6 +14,7 @@ from app.models import (
     role_model,
     subject_model,
     class_model,
+    schedule_model  
 )
 
 # Create the database tables
@@ -42,3 +43,4 @@ app.include_router(role_route.router, prefix=prefix)
 app.include_router(user_route.router, prefix=prefix)
 app.include_router(class_router.router, prefix=prefix)
 app.include_router(subject_route.router, prefix=prefix)
+app.include_router(schedule_route.router, prefix=prefix)
