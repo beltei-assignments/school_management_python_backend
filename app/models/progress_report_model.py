@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, Numeric, ForeignKey
 from app.database import Base
 from sqlalchemy.orm import relationship
 
+
 class ProgressReport(Base):
     __tablename__ = "reports"
 

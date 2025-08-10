@@ -42,3 +42,4 @@ class UserUpdate(UserBase):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     password: Optional[str] = None
+    roles_ids: list[int]

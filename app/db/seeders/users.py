@@ -1,9 +1,9 @@
-from app.database import SessionLocal
+from sqlalchemy.orm import Session
 from app.schemas import user_schema as user_schema
 from app.services import user_service as user_service
 
 
-def seed_users():
+def seed_users(db: Session):
     users = [
         {
             "email": "admin@example.com",
@@ -57,7 +57,7 @@ def seed_users():
 
     for user in users:
         user_service.create_user(
-            db=SessionLocal(),
+            db=db,
             userPayload=user_schema.UserCreate(
                 email=user["email"],
                 password=user["password"],

@@ -1,9 +1,8 @@
-from app.database import SessionLocal
+from sqlalchemy.orm import Session
 from app.models.role_model import Role
 
 
-def seed_roles():
-    db = SessionLocal()
+def seed_roles(db: Session):
     roles = [
         {"name": "Admin", "value": "admin"},
         {"name": "Teacher", "value": "teacher"},

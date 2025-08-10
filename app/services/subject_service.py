@@ -5,38 +5,43 @@ from app.models.subject_model import Subject
 from app.schemas import subject_schema
 from app.utils import paginate
 
+
 def get_all_subjects(
-        db: Session,
-        page: int = 1,
-        limit: int = 10,
-        name: str = None
+    db: Session, page: int = 1, limit: int = 10, id: str = None, name: str = None
 ):
-    skip  = paginate.getSkip(page=page, limit=limit)
+    skip = paginate.getSkip(page=page, limit=limit)
     query = db.query(Subject).filter(Subject.disabled == False)
 
+    # Filters
+    if id is not None and id is not "":
+        query = query.filter(Subject.id == id)
     if name:
         query = query.filter(Subject.name.ilike(f"%{name}%"))
 
     count = query.count()
-    subjects = query.offset(skip).limit(limit).all()
+    subjects = query.order_by(Subject.id.desc()).offset(skip).limit(limit).all()
 
-    subjects_mapped = [subject_schema.SubjectGet.from_orm(subject) for subject in subjects]
+    subjects_mapped = [
+        subject_schema.SubjectGet.from_orm(subject) for subject in subjects
+    ]
     return subjects_mapped, count
 
-def get_subject_id(
-        db: Session,
-        subject_id: int
-):
-    subject = db.query(Subject).filter(Subject.disabled == False, Subject.id == subject_id).first()
+
+def get_subject_id(db: Session, subject_id: int):
+    subject = (
+        db.query(Subject)
+        .filter(Subject.disabled == False, Subject.id == subject_id)
+        .first()
+    )
     if subject is None:
         raise HTTPException(status_code=404, detail="Subject not found")
     return {"subject": subject_schema.SubjectGet.from_orm(subject)}
 
-def create_subject(
-        db: Session,
-        subject_payload: subject_schema.SubjectCreate
-):
-    subject_exist = db.query(Subject).filter(Subject.name == subject_payload.name).first()
+
+def create_subject(db: Session, subject_payload: subject_schema.SubjectCreate):
+    subject_exist = (
+        db.query(Subject).filter(Subject.name == subject_payload.name).first()
+    )
     if subject_exist is not None:
         raise HTTPException(status_code=409, detail="Subject already exists")
     payload = subject_payload.dict()
@@ -50,13 +55,16 @@ def create_subject(
         raise HTTPException(status_code=400, detail="Error creating subject")
     return new_subject
 
+
 def update_subject(
-        db: Session,
-        subject_id: int,
-        subject_payload: subject_schema.SubjectUpdate
+    db: Session, subject_id: int, subject_payload: subject_schema.SubjectUpdate
 ):
     try:
-        subject = db.query(Subject).filter(Subject.disabled == False, Subject.id == subject_id).first()
+        subject = (
+            db.query(Subject)
+            .filter(Subject.disabled == False, Subject.id == subject_id)
+            .first()
+        )
         if subject is None:
             raise HTTPException(status_code=404, detail="Subject not found")
         for key, value in subject_payload.dict(exclude_unset=True).items():
@@ -73,11 +81,13 @@ def update_subject(
         print(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail="An unexpected error occured")
 
-def delete_subject(
-        db: Session,
-        subject_id: int
-):
-    subject = db.query(Subject).filter(Subject.disabled == False, Subject.id == subject_id).first()
+
+def delete_subject(db: Session, subject_id: int):
+    subject = (
+        db.query(Subject)
+        .filter(Subject.disabled == False, Subject.id == subject_id)
+        .first()
+    )
     if subject is None:
         raise HTTPException(status_code=404, detail="Subject not found")
     subject.disabled = True
@@ -86,5 +96,5 @@ def delete_subject(
     except IntegrityError as e:
         db.rollback()
         raise HTTPException(status_code=400, detail="Error deleting subject")
-    
-    return subject
+
+    return {"success": True, "message": "Subject deleted successfully"}
