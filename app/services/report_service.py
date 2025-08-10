@@ -10,6 +10,7 @@ def get_all_reports(
     db: Session,
     page: int = 1,
     limit: int = 10,
+    id: str = None,
     student_id: int = None,
     subject_id: int = None,
     term: str = None,
@@ -22,6 +23,8 @@ def get_all_reports(
         .filter(ProgressReport.disabled == False)
     )
 
+    if id is not None:
+        query = query.filter(ProgressReport.id == id)
     if student_id is not None:
         query = query.filter(ProgressReport.student_id == student_id)
     if subject_id is not None:
@@ -30,7 +33,7 @@ def get_all_reports(
         query = query.filter(ProgressReport.term == term)
 
     total_count = query.count()
-    reports = query.offset(skip).limit(limit).all()
+    reports = query.order_by(ProgressReport.id.desc()).offset(skip).limit(limit).all()
 
     # Use ReportGet.from_orm() to serialize each report
     report_list = [report_schema.ReportGet.from_orm(report) for report in reports]

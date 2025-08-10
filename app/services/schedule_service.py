@@ -45,7 +45,9 @@ def get_schedules(
         query = query.filter(ClassSubject.teacher_id == teacher_id)
 
     total = query.count()
-    rows = query.offset((page - 1) * limit).limit(limit).all()
+    rows = (
+        query.order_by(Schedule.id.desc()).offset((page - 1) * limit).limit(limit).all()
+    )
 
     return {"count": total, "rows": rows}
 

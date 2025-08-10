@@ -12,6 +12,7 @@ router = APIRouter(tags=["Reports management"], prefix="/reports")
 def get_all_reports(
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1),
+    id: str = None,
     student_id: Optional[int] = None,
     subject_id: Optional[int] = None,
     term: Optional[str] = None,
@@ -21,6 +22,7 @@ def get_all_reports(
         db=db,
         page=page,
         limit=limit,
+        id=id,
         student_id=student_id,
         subject_id=subject_id,
         term=term,
