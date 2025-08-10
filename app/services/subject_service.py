@@ -87,4 +87,4 @@ def delete_subject(
         db.rollback()
         raise HTTPException(status_code=400, detail="Error deleting subject")
     
-    return {"success": True, "message": "Subject deleted successfully"}
+    return subject

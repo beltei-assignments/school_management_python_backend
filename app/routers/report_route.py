@@ -40,3 +40,20 @@ def create_report(
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.put("/{report_id}")
+def update_report(
+    report_id: int,
+    report: report_schema.ReportUpdate,
+    db:Session = Depends(get_db)
+):
+    report_service.update_report(db=db, report_id=report_id, report_payload=report)
+    return {"success": True, "data": report}
+
+@router.delete("/{report_id}")
+def delete_report(
+    report_id: int,
+    db: Session = Depends(get_db)
+):
+    report_service.delete_report(db=db, report_id=report_id)
+    return {"success": True, "message": "Report delete successfully!"}

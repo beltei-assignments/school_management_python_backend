@@ -31,3 +31,12 @@ class ReportCreate(BaseModel):
     subject_id: int
     term: str
     score: float
+
+class ReportUpdate(ReportBase):
+    student_id: Optional[int] = None
+    subject_id: Optional[int] = None
+    term: Optional[str] = None
+    score: Optional[float] = None
+
+    class Config:
+        from_attributes = True

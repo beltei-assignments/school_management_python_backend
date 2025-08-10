@@ -56,3 +56,40 @@ def create_report(
         db.rollback()
         print(f"Database Error: {e}")
     return new_report
+
+def update_report(
+        db: Session,
+        report_id: int,
+        report_payload: report_schema.ReportUpdate
+):
+    try:
+        report = db.query(ProgressReport).filter(ProgressReport.disabled == False, ProgressReport.id == report_id).first()
+        if report is None:
+            raise HTTPException(status_code=404, detail="Report not found!")
+        for key, value in report_payload.dict(exclude_unset=True).items():
+            setattr(report, key, value)
+        db.commit()
+        db.refresh(report)
+        return report
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Error updating report!")
+    except Exception as e:
+        db.rollback()
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=400, detail="An unexpected error occured")
+    
+def delete_report(
+        db: Session,
+        report_id: int
+):
+    report = db.query(ProgressReport).filter(ProgressReport.disabled == False, ProgressReport.id == report_id).first()
+    if report is None:
+        raise HTTPException(status_code=404, detail="Report not found!")
+    report.disabled = True
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Error deleting report!")
+    return report
