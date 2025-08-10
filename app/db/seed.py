@@ -6,6 +6,7 @@ from app.models.role_model import Role
 from app.models.user_has_role_model import UserHasRole
 from app.models.class_model import Class
 from app.models.subject_model import Subject
+from app.models.schedule_model import Schedule, ClassSubject
 from app.db.seeders import roles, users, subjects, classes
 
 
@@ -33,6 +34,8 @@ def clean_all_tables(db: Session):
 
     # For many-to-many association tables, use execute
     db.execute(UserHasRole.delete())
+    db.query(Schedule).delete()
+    db.query(ClassSubject).delete()
     db.query(User).delete()
     db.query(Role).delete()
     db.query(Class).delete()
@@ -45,6 +48,8 @@ def clean_all_tables(db: Session):
     db.execute(text("ALTER TABLE roles AUTO_INCREMENT = 1;"))
     db.execute(text("ALTER TABLE classes AUTO_INCREMENT = 1;"))
     db.execute(text("ALTER TABLE subjects AUTO_INCREMENT = 1;"))
+    db.execute(text("ALTER TABLE schedules AUTO_INCREMENT = 1;"))
+    db.execute(text("ALTER TABLE class_subjects AUTO_INCREMENT = 1;"))
     db.commit()
 
     print("---> Cleaning all tables completed. <---")

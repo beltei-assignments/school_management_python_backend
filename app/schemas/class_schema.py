@@ -1,18 +1,14 @@
 from typing import List
 from pydantic import BaseModel
 
-
 class ClassBase(BaseModel):
     name: str
-
 
 class ClassCreate(ClassBase):
     pass
 
-
 class ClassUpdate(ClassBase):
     pass
-
 
 class ClassResponse(BaseModel):
     id: int
@@ -20,12 +16,11 @@ class ClassResponse(BaseModel):
     disabled: bool = False
 
     class Config:
-        orm_mode = True
-
+        from_attributes = True
 
 class ClassesPaginationResponse(BaseModel):
     count: int
     rows: List[ClassResponse]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
