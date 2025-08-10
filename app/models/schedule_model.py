@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class ClassSubject(Base):
     __tablename__ = "class_subjects"
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -13,7 +14,10 @@ class ClassSubject(Base):
     class_ = relationship("Class", backref="class_subjects")
     subject = relationship("Subject", backref="class_subjects")
     teacher = relationship("User", backref="class_subjects")
-    schedules = relationship("Schedule", back_populates="class_subject", cascade="all, delete")
+    schedules = relationship(
+        "Schedule", back_populates="class_subject", cascade="all, delete"
+    )
+
 
 class Schedule(Base):
     __tablename__ = "schedules"

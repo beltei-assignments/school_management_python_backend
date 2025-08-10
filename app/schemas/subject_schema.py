@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class SubjectBase(BaseModel):
     name: str
     disabled: Optional[bool] = False
@@ -8,8 +9,10 @@ class SubjectBase(BaseModel):
     class Config:
         from_attributes = True  # updated for Pydantic v2
 
+
 class SubjectCreate(SubjectBase):
     pass
+
 
 class SubjectUpdate(BaseModel):
     name: Optional[str] = None
@@ -17,6 +20,7 @@ class SubjectUpdate(BaseModel):
 
     class Config:
         from_attributes = True  # updated for Pydantic v2
+
 
 class SubjectGet(BaseModel):
     id: Optional[int] = None
