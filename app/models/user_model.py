@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from app.models.user_has_role_model import UserHasRole
+from app.models.progress_report_model import ProgressReport
 from sqlalchemy.orm import relationship
 
 from app.database import Base
