@@ -133,7 +133,7 @@ def seed_classes(db: Session):
             "class_subjects": [
                 {
                     "subject_id": 1,
-                    "teacher_id": 2,
+                    "teacher_id": 7,
                 }
             ],
             "schedules": [

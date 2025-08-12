@@ -53,6 +53,14 @@ def seed_users(db: Session):
             "phone_number": "1234567890",
             "roles_ids": [4],
         },
+        {
+            "email": "phalla@example.com",
+            "password": "123",
+            "first_name": "Phalla",
+            "last_name": "Sean",
+            "phone_number": "1234567890",
+            "roles_ids": [2],
+        },
     ]
 
     for user in users:
