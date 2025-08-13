@@ -8,10 +8,21 @@ from app.services.schedule_service import (
     create_schedule,
     update_schedule,
     delete_schedule,
+    check_schedule,
 )
 from app.schemas.schedule_schema import ScheduleCreate, ScheduleResponseItem
 
 router = APIRouter(prefix="/schedules", tags=["Schedules"])
+
+
+@router.get("/check_schedule/")
+def check_schedule_exist(
+    db: Session = Depends(get_db),
+    not_schedule_id: int = None,
+    teacher_id: int = None,
+    day_of_week: str = None,
+):
+    return check_schedule(db, not_schedule_id, teacher_id, day_of_week)
 
 
 @router.get("/", response_model=dict)

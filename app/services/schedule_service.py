@@ -1,9 +1,28 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import and_
 
 from app.models.schedule_model import Schedule, ClassSubject
 from app.schemas.schedule_schema import ScheduleCreate
+
+
+def check_schedule(
+    db: Session, not_schedule_id: int, teacher_id: int, day_of_week: str
+):
+    schedule = (
+        db.query(Schedule)
+        .join(ClassSubject)
+        .filter(
+            and_(
+                ClassSubject.teacher_id == teacher_id,
+                Schedule.day_of_week == day_of_week,
+            )
+        )
+        .first()
+    )
+
+    return {"is_found": schedule is not None and schedule.id != not_schedule_id}
 
 
 def get_schedules(
@@ -74,49 +93,48 @@ def create_schedule(db: Session, data: ScheduleCreate):
                 status_code=422, detail="End time must be after start time"
             )
 
-    class_subject = (
-        db.query(ClassSubject)
-        .filter_by(
-            class_id=data.class_id,
-            subject_id=data.subject_id,
-            teacher_id=data.teacher_id,
-            disabled=False,
-        )
-        .first()
-    )
+    # class_subject = (
+    #     db.query(ClassSubject)
+    #     .filter_by(
+    #         class_id=data.class_id,
+    #         subject_id=data.subject_id,
+    #         teacher_id=data.teacher_id,
+    #         disabled=False,
+    #     )
+    #     .first()
+    # )
 
-    if not class_subject:
-        class_subject = ClassSubject(
-            class_id=data.class_id,
-            subject_id=data.subject_id,
-            teacher_id=data.teacher_id,
-        )
-        db.add(class_subject)
-        db.commit()
-        db.refresh(class_subject)
+    # if not class_subject:
+    class_subject = ClassSubject(
+        class_id=data.class_id,
+        subject_id=data.subject_id,
+        teacher_id=data.teacher_id,
+    )
+    db.add(class_subject)
+    db.commit()
+    db.refresh(class_subject)
 
     created_schedules = []
 
     for sched in data.schedules:
         day_of_week = sched.day_of_week.strip()
-        conflict = (
-            db.query(Schedule)
-            .filter(
-                Schedule.class_subject_id == class_subject.id,
-                Schedule.day_of_week == day_of_week,
-                Schedule.start_time < sched.end_time,
-                Schedule.end_time > sched.start_time,
-                Schedule.disabled == False,
-            )
-            .first()
-        )
+        # conflict = (
+        #     db.query(Schedule)
+        #     .filter(
+        #         Schedule.class_subject_id == class_subject.id,
+        #         Schedule.day_of_week == day_of_week,
+        #         # Schedule.start_time < sched.end_time,
+        #         # Schedule.end_time > sched.start_time,
+        #         Schedule.disabled == False,
+        #     )
+        #     .first()
+        # )
 
-        if conflict:
-            raise HTTPException(
-                status_code=409,
-                detail=f"Schedule conflict: overlaps with existing schedule on {day_of_week} "
-                f"from {conflict.start_time} to {conflict.end_time}",
-            )
+        # if conflict:
+        #     raise HTTPException(
+        #         status_code=409,
+        #         detail=f"Schedule conflict: overlaps with existing schedule on {day_of_week} "
+        #     )
 
         schedule_entry = Schedule(
             class_subject_id=class_subject.id,
